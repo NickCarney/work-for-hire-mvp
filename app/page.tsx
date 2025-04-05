@@ -6,6 +6,8 @@ export default function Home() {
   const now = new Date();
 
   const [prompt, setPrompt] = useState("");
+
+  const [jurisdiction, setJurisdiction] = useState("");
   const [hiringName, setHiringName] = useState("");
   const [hiringRole, setHiringRole] = useState("");
   const [hiringEmail, setHiringEmail] = useState("");
@@ -156,6 +158,13 @@ export default function Home() {
       value: creditName,
       placeholder: "e.g. John Doe",
     },
+    {
+      id: 19,
+      question: "What is the jurisdiction of this agreement?",
+      setter: setJurisdiction,
+      value: jurisdiction,
+      placeholder: "e.g. North Carolina",
+    },
   ];
 
   const currentQuestion = questions[currentQuestionIndex];
@@ -169,15 +178,17 @@ export default function Home() {
       const prompt =
         "You are a music law expert. Generate a work for hire agreement based on the following information: " +
         `It is currently ${now}` +
-        `Hiring Party: ${hiringName}, ${hiringRole}, ${hiringEmail}. ` +
-        `Contractor: ${contractorName}, ${contractorRole}, ${contractorEmail}. ` +
+        `Hiring Party: ${hiringName}, ${hiringRole}, ${hiringEmail}, ${hiringAddress}. ` +
+        `Contractor: ${contractorName}, ${contractorRole}, ${contractorEmail}, ${contractorAddress}. ` +
         `Song Title: ${song}. Type of Work: ${type}. Delivery Deadline: ${deadline}. ` +
         `Deliverable: ${deliverable}. Payment Amount: ${paymentAmount}. Payment Method: ${paymentMethod}. ` +
         `Payment Due Date: ${dueDate}. One Time Payment: ${oneTime}. Copyright Owner: ${copyrightOwner}. ` +
         `Preferred Credit Name: ${creditName}. ` +
+        `In a jurisdiction of ${jurisdiction}` +
         `Place the contract text between quadruple backticks`;
       console.log("prompt", prompt);
       setPrompt(prompt);
+
       const response = await fetch(`/api/generateContract`, {
         method: "POST",
         headers: {
@@ -198,6 +209,43 @@ export default function Home() {
       });
       const ipfsHash = await ipfsResponse.text();
       console.log("IPFS Hash:", ipfsHash);
+
+      const hiring_party = JSON.stringify({
+        name: hiringName,
+        role: hiringRole,
+        email: hiringEmail,
+        address: hiringAddress,
+      });
+      const contractor_party = JSON.stringify({
+        name: contractorName,
+        role: contractorRole,
+        email: contractorEmail,
+        address: contractorAddress,
+      });
+      const supabaseResponse = await fetch(`/api/supabase`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          hiring_party: hiring_party,
+          contractor: contractor_party,
+          song_title: song,
+          type_of_work: type,
+          delivery_deadline: deadline,
+          deliverables: deliverable,
+          payment_amount: paymentAmount,
+          payment_method: paymentMethod,
+          due_date: dueDate,
+          royalty_waiver: oneTime,
+          copyright_owner: copyrightOwner,
+          credit_name: creditName,
+          jurisdiction: jurisdiction,
+          ipfs_cid: ipfsHash,
+        }),
+      });
+      console.log("Supabase Response:", supabaseResponse);
+
       alert(
         "Contract generated and pinned to IPFS! check out: https://ipfs.io/ipfs/" +
           ipfsHash.split('"')[1]
