@@ -178,7 +178,6 @@ export default function Home() {
         `Place the contract text between quadruple backticks`;
       console.log("prompt", prompt);
       setPrompt(prompt);
-      console.log(prompt);
       const response = await fetch(`/api/generateContract`, {
         method: "POST",
         headers: {
@@ -215,7 +214,7 @@ export default function Home() {
       alert("This is the first question!");
     }
   };
-
+  console.log(prompt);
   return (
     <div className="grid items-center justify-items-center min-h-screen p-8 sm:p-20 font-sans">
       <p className="text-[250%]">Work For Hire Agreement Generator</p>
