@@ -1,103 +1,248 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const now = new Date();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+  const [prompt, setPrompt] = useState("");
+  const [hiringName, setHiringName] = useState("");
+  const [hiringRole, setHiringRole] = useState("");
+  const [hiringEmail, setHiringEmail] = useState("");
+  const [hiringAddress, setHiringAddress] = useState("");
+  const [contractorName, setContractorName] = useState("");
+  const [contractorRole, setContractorRole] = useState("");
+  const [contractorEmail, setContractorEmail] = useState("");
+  const [contractorAddress, setContractorAddress] = useState("");
+  const [song, setSong] = useState("");
+  const [type, setType] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const [deliverable, setDeliverable] = useState("");
+  const [paymentAmount, setPaymentAmount] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [oneTime, setOneTime] = useState("");
+  const [copyrightOwner, setCopyrightOwner] = useState("");
+  const [creditName, setCreditName] = useState("");
+
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [inputValue, setInputValue] = useState("");
+
+  const questions = [
+    {
+      id: 1,
+      question: "What is the full legal name of the hiring party?",
+      setter: setHiringName,
+      value: hiringName,
+      placeholder: "e.g. John Doe",
+    },
+    {
+      id: 2,
+      question: "What is the role of the hiring party?",
+      setter: setHiringRole,
+      value: hiringRole,
+      placeholder: "e.g., artist, producer, label",
+    },
+    {
+      id: 3,
+      question: "What is the email of the hiring party?",
+      setter: setHiringEmail,
+      value: hiringEmail,
+      placeholder: "e.g. Johndoe@email.com",
+    },
+    {
+      id: 4,
+      question: "What is the address of the hiring party?",
+      setter: setHiringAddress,
+      value: hiringAddress,
+      placeholder: "e.g. 123 abc street, Charlotte, NC, 28208",
+    },
+    {
+      id: 5,
+      question: "What is the full legal name of the contractor?",
+      setter: setContractorName,
+      value: contractorName,
+      placeholder: "e.g. Jane Doe",
+    },
+    {
+      id: 6,
+      question: "What is the role of the contractor?",
+      setter: setContractorRole,
+      value: contractorRole,
+      placeholder: "e.g., session musician, beatmaker",
+    },
+    {
+      id: 7,
+      question: "What is the email of the contractor?",
+      setter: setContractorEmail,
+      value: contractorEmail,
+      placeholder: "e.g. Janedoe@email.com",
+    },
+    {
+      id: 8,
+      question: "What is the address of the contractor?",
+      setter: setContractorAddress,
+      value: contractorAddress,
+      placeholder: "e.g. 1212 abc street, Charlotte, NC, 28208",
+    },
+    {
+      id: 9,
+      question: "What is the song title?",
+      setter: setSong,
+      value: song,
+      placeholder: "Heads Will Roll",
+    },
+    {
+      id: 10,
+      question: "What is the type of work?",
+      setter: setType,
+      value: type,
+      placeholder:
+        "e.g. Instrumental beat, guitar tracking, topline vocals, mixing, songwriting, etc.",
+    },
+    {
+      id: 11,
+      question: "What is the delivery deadline?",
+      setter: setDeadline,
+      value: deadline,
+      placeholder: "e.g. 4/6/2025",
+    },
+    {
+      id: 12,
+      question: "What is the deliverable?",
+      setter: setDeliverable,
+      value: deliverable,
+      placeholder: "e.g. WAV files, Stems, MIDI, Pro Tools session, etc.",
+    },
+    {
+      id: 13,
+      question: "What is the payment amount?",
+      setter: setPaymentAmount,
+      value: paymentAmount,
+      placeholder: "$2000",
+    },
+    {
+      id: 14,
+      question: "What is the payment method?",
+      setter: setPaymentMethod,
+      value: paymentMethod,
+      placeholder: "e.g. Venmo, Cash, etc.",
+    },
+    {
+      id: 15,
+      question: "What is the payment due date?",
+      setter: setDueDate,
+      value: dueDate,
+      placeholder: "4/10/2025",
+    },
+    {
+      id: 16,
+      question: "Is this a one time payment?",
+      setter: setOneTime,
+      value: oneTime,
+      placeholder: "Yes/No",
+    },
+    {
+      id: 17,
+      question: "Who owns the copyright?",
+      setter: setCopyrightOwner,
+      value: copyrightOwner,
+      placeholder: "e.g. John Doe",
+    },
+    {
+      id: 18,
+      question: "What is the preferred credit name?",
+      setter: setCreditName,
+      value: creditName,
+      placeholder: "e.g. John Doe",
+    },
+  ];
+
+  const currentQuestion = questions[currentQuestionIndex];
+
+  const handleNext = async () => {
+    currentQuestion.setter(inputValue);
+    setInputValue("");
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      const prompt =
+        "You are a music law expert. Generate a work for hire agreement based on the following information: " +
+        `It is currently ${now}` +
+        `Hiring Party: ${hiringName}, ${hiringRole}, ${hiringEmail}. ` +
+        `Contractor: ${contractorName}, ${contractorRole}, ${contractorEmail}. ` +
+        `Song Title: ${song}. Type of Work: ${type}. Delivery Deadline: ${deadline}. ` +
+        `Deliverable: ${deliverable}. Payment Amount: ${paymentAmount}. Payment Method: ${paymentMethod}. ` +
+        `Payment Due Date: ${dueDate}. One Time Payment: ${oneTime}. Copyright Owner: ${copyrightOwner}. ` +
+        `Preferred Credit Name: ${creditName}. ` +
+        `Place the contract text between quadruple backticks`;
+      console.log("prompt", prompt);
+      setPrompt(prompt);
+      console.log(prompt);
+      const response = await fetch(`/api/generateContract`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: prompt }),
+      });
+      const contract = await response.text();
+      const extractedText = contract.match(/````([\s\S]*?)````/)?.[1] || "";
+      const formattedText = extractedText.replace(/\\n/g, "\n");
+      const formattedText2 = formattedText.replace(/\\/g, "");
+      const ipfsResponse = await fetch(`/api/pinToIpfs`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ contract: formattedText2 }),
+      });
+      const ipfsHash = await ipfsResponse.text();
+      console.log("IPFS Hash:", ipfsHash);
+      alert(
+        "Contract generated and pinned to IPFS! check out: https://ipfs.io/ipfs/" +
+          ipfsHash.split('"')[1]
+      );
+    }
+  };
+
+  const handleBack = () => {
+    currentQuestion.setter(inputValue);
+    setInputValue("");
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    } else {
+      alert("This is the first question!");
+    }
+  };
+
+  return (
+    <div className="grid items-center justify-items-center min-h-screen p-8 sm:p-20 font-sans">
+      <p className="text-[250%]">Work For Hire Agreement Generator</p>
+      <div className="flex flex-col items-center justify-center gap-6 p-8 bg-white rounded-lg shadow-lg w-full sm:w-[600px] text-center">
+        <label className="text-xl font-semibold">
+          {currentQuestion.question}
+        </label>
+        <input
+          type="text"
+          value={inputValue}
+          placeholder={currentQuestion.placeholder}
+          onChange={(e) => setInputValue(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 outline"
+        />
+        <button
+          onClick={handleNext}
+          className="px-6 py-2 mt-4 text-white bg-blue-600 rounded-md hover:bg-blue-700"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          Next
+        </button>
+        <button
+          onClick={handleBack}
+          className="px-6 py-2 mt-4 text-white bg-blue-600 rounded-md hover:bg-blue-700"
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          Back
+        </button>
+      </div>
     </div>
   );
 }
